@@ -1,0 +1,2 @@
+rootProject.name = "Ingetrating Audio & Video in Android App"
+include ':app'
