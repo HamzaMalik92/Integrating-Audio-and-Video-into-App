@@ -1,10 +1,12 @@
 package com.example.ingetratingaudiovideoinandroidapp;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -22,33 +24,37 @@ public class MainActivity extends AppCompatActivity
         MediaPlayer.OnCompletionListener {
 
   Button playBtn, stopMusicBtn, playMusicBtn;
-  VideoView videoView;
-  MediaController mediaController;
-  MediaPlayer mediaPlayer;
+  VideoView videoView; // for playing video
+  MediaController mediaController; // for video controlling e.g stop, forward, back buttons
+  MediaPlayer mediaPlayer; // for audio / volume controlling
+  AudioManager audioManager; // for playing audio
   SeekBar volumeSeekBar, backAndForthSeekBar;
-  AudioManager audioManager;
+
   Timer timer;
 
+  @RequiresApi(api = Build.VERSION_CODES.O)
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
-    playBtn = findViewById(R.id.playBtn);
+    playBtn = findViewById(R.id.playVideoBtn);
     playMusicBtn = findViewById(R.id.playMusicBtn);
     stopMusicBtn = findViewById(R.id.pauseMusicBtn);
     videoView = findViewById(R.id.videoView);
     volumeSeekBar = findViewById(R.id.volumeSeekBar);
     backAndForthSeekBar = findViewById(R.id.backAndForthSeekBar);
+
     mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.rainsound);
     mediaPlayer.setOnCompletionListener(MainActivity.this);
-    audioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
+    audioManager =
+        (AudioManager) getSystemService(AUDIO_SERVICE); // getting audio service from system
 
+    // getting audio max and current volume values
     int maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
-    int currentVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+    int currentVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
 
     volumeSeekBar.setMax(maxVolume);
-    //    volumeSeekBar.setMin(minVolume);
     volumeSeekBar.setProgress(currentVolume);
 
     volumeSeekBar.setOnSeekBarChangeListener(
@@ -56,7 +62,8 @@ public class MainActivity extends AppCompatActivity
           @Override
           public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
             if (b) {
-              audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, i, 0);
+              audioManager.setStreamVolume(
+                  AudioManager.STREAM_MUSIC, i, 0); // set new value for volume
             }
           }
 
@@ -74,13 +81,15 @@ public class MainActivity extends AppCompatActivity
     playMusicBtn.setOnClickListener(MainActivity.this);
     stopMusicBtn.setOnClickListener(MainActivity.this);
     mediaController = new MediaController(MainActivity.this);
+
   }
 
   @Override
   public void onClick(View view) {
 
     switch (view.getId()) {
-      case R.id.playBtn:
+      case R.id.playVideoBtn:
+
         Uri videoUri = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.rcetwater);
 
         videoView.setVideoURI(videoUri);
@@ -92,7 +101,9 @@ public class MainActivity extends AppCompatActivity
         break;
 
       case R.id.playMusicBtn:
+
         mediaPlayer.start();
+
         timer = new Timer();
         timer.scheduleAtFixedRate(
             new TimerTask() { // timerTask will execute in a new thread
@@ -107,6 +118,7 @@ public class MainActivity extends AppCompatActivity
         break;
 
       case R.id.pauseMusicBtn:
+
         mediaPlayer.pause();
 
         timer.cancel();
@@ -117,7 +129,8 @@ public class MainActivity extends AppCompatActivity
 
   @Override
   public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-    mediaPlayer.seekTo(i); // update music playing position
+    if (b)
+      mediaPlayer.seekTo(i); // update music playing position
   }
 
   @Override

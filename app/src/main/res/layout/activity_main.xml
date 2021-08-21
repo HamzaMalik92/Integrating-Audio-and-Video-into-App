@@ -21,7 +21,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/playBtn"
+        android:id="@+id/playVideoBtn"
         android:layout_width="wrap_content"
         android:layout_height="60dp"
         android:layout_marginStart="8dp"
@@ -48,7 +48,7 @@
         android:textColor="#FFFFFF"
         app:backgroundTint="#FF9800"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/playBtn" />
+        app:layout_constraintTop_toBottomOf="@+id/playVideoBtn" />
 
     <Button
         android:id="@+id/playMusicBtn"
@@ -61,7 +61,7 @@
         android:textColor="#FFFFFF"
         app:backgroundTint="#FF9800"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/playBtn" />
+        app:layout_constraintTop_toBottomOf="@+id/playVideoBtn" />
 
     <SeekBar
         android:id="@+id/volumeSeekBar"
@@ -81,7 +81,7 @@
         android:textColor="#FFFFFF"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/playBtn" />
+        app:layout_constraintTop_toBottomOf="@+id/playVideoBtn" />
 
     <TextView
         android:id="@+id/textView2"
